@@ -20,6 +20,7 @@ public class MagicSquare {
     private Random numberNew = new Random();
     private ArrayList<Integer> list;
     private ArrayList<Integer> auxList;
+    private int sumaCorrecta;
     
     public MagicSquare(int size){
         this.size = size;
@@ -35,7 +36,11 @@ public class MagicSquare {
         //Generamos una Lista con todos los numeros
         generateList();
         
-        //
+        //Muestra la suma correcta
+        sumaCorrecta = getSumCorrect();
+        System.out.println("Suma: " + sumaCorrecta);
+        
+        //Guardamos el Numero de Combinaciones
         int combinaciones = 0;
         
         while (!newSquare()){
@@ -46,8 +51,12 @@ public class MagicSquare {
         }
         printSquare();
         System.out.println("Numero de Combinaciones: " + combinaciones);
+        
     }
     
+    private int getSumCorrect(){
+        return ((SIZE_SQUARE * SIZE_SQUARE * SIZE_SQUARE) + SIZE_SQUARE) / 2;
+    }
     
     private boolean newSquare(){
         
@@ -56,28 +65,22 @@ public class MagicSquare {
         
         //Clonamos la lista Original
         auxList = (ArrayList<Integer>) list.clone();
-        int sumOne  = 0;
-        int sumFila;
-        int sumColu;
         
         //Generamos y comprobamos la Matriz
         for (int x=0; x<size; x++){
-            
-            sumFila = generaFila(x);
-            sumColu = generaColu(x);
-            
-            if (sumFila != sumColu)
+            //Generamos la Fila y Comprobamos la Suma
+            if (generaFila(x) != sumaCorrecta)
                 return false;
-            
-            if (x == 0)
-               sumOne = sumFila;
-            else if (sumFila != sumOne)
-                return false;            
+            //Generamos la Columna y Comprobamos la Suma
+            else if (generaColu(x) != sumaCorrecta)
+                return false;
         }
-        if (getDiagonalA() != sumOne)
+        //Comprobamos la Primera Diagonal
+        if (getDiagonalA() != sumaCorrecta)
             return false;
-        else if (getDiagonalB() != sumOne)
-            return false;
+        //Comprobamos la Segunda Diagonal
+        else if (getDiagonalB() != sumaCorrecta)
+           return false;
 
         //Todo ha ido bien
         return true;
