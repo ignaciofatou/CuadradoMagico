@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class MagicSquare {
     
-    private final int SIZE_SQUARE = 4;
+    private final int SIZE_SQUARE = 3;
     private int size;
     private int[][] matrix;
     private Random numberNew = new Random();
@@ -41,9 +41,9 @@ public class MagicSquare {
         System.out.println("Suma: " + sumaCorrecta);
         
         //Guardamos el Numero de Combinaciones
-        int combinaciones = 0;
+        long combinaciones = 0;
         
-        while (!newSquare()){
+        while (!newAlternateSquare()){
             combinaciones++;
             
             if ((combinaciones % 1000000) == 0.0)
@@ -65,7 +65,7 @@ public class MagicSquare {
         
         //Clonamos la lista Original
         auxList = (ArrayList<Integer>) list.clone();
-        
+
         //Generamos y comprobamos la Matriz
         for (int x=0; x<size; x++){
             //Generamos la Fila y Comprobamos la Suma
@@ -123,7 +123,7 @@ public class MagicSquare {
         
         return suma;
     }
-    
+
     private int getDiagonalB(){        
         
         int suma = 0;
@@ -166,5 +166,107 @@ public class MagicSquare {
         }
     }
     
+
     
+    //Codigo Alternativo
+    private boolean newAlternateSquare(){
+        
+        //Declaramos el tamaño de la Matriz
+        matrix = new int[size][size];
+        
+        //Clonamos la lista Original
+        auxList = (ArrayList<Integer>) list.clone();
+        
+        //Genero y Compruebo la primera Diagonal /
+        if (generaDiagonalA() != sumaCorrecta)
+            return false;
+        //Genero y Compruebo la segunda Diagonal \
+        else if (generaDiagonalB() != sumaCorrecta)
+            return false;
+        
+        //Generamos y comprobamos la Matriz
+        for (int x=0; x<size; x++){
+            //Generamos la Fila y Comprobamos la Suma
+            if (generaFilaAlt(x) != sumaCorrecta)
+                return false;
+            //Generamos la Columna y Comprobamos la Suma
+            else if (generaColuAlt(x) != sumaCorrecta)
+                return false;
+        }
+        //Todo ha ido bien
+        return true;
+    }
+    
+    
+    private int generaDiagonalA(){        
+
+        int suma = 0;
+        
+        for (int x = 0; x < size; x++) {
+            matrix[(size - 1) - x][x] = getNexNumber();
+            suma = suma + matrix[(size - 1) - x][x];
+        }        
+        return suma;        
+    }
+    private int generaDiagonalB(){
+
+        int suma = 0;
+
+        //Si es Par no se cruzan en medio
+        if (esPar(size)){
+            for (int x=0; x<size; x++){
+
+                matrix[x][x] = getNexNumber();
+                suma = suma + matrix[x][x];
+            }
+        }
+        //Si es Impar se cruzan en medio
+        else{
+            int posMedio = size / 2;
+            
+            for (int x=0; x<size; x++){
+                if (x != posMedio)
+                    matrix[x][x] = getNexNumber();                    
+
+                suma = suma + matrix[x][x];
+            }
+        }
+        return suma;
+    }
+    private boolean esPar(int x) {
+        if ((x % 2) == 0)
+            return true;
+ 
+        return false;
+    }
+    
+    private int generaFilaAlt(int fila){        
+        
+        int suma = 0;
+        
+        for (int x=0; x<size; x++){
+            
+            if (x > fila)
+                matrix[fila][x] = getNexNumber(); 
+           
+            suma = suma + matrix[fila][x];
+        }
+        return suma;
+    }
+    
+    private int generaColuAlt(int colu){        
+        
+        int suma = 0;
+        
+        for (int x=0; x<size; x++){
+            
+            if (x > colu)
+                matrix[x][colu] = getNexNumber(); 
+           
+            suma = suma + matrix[x][colu];
+        }
+        return suma;
+    }
 }
+
+
