@@ -40,6 +40,9 @@ public class MagicSquare {
         
         while (!newSquare()){
             combinaciones++;
+            
+            if ((combinaciones % 1000000) == 0.0)
+                System.out.println("Se han alcanzado " + combinaciones + " combinaciones");
         }
         printSquare();
         System.out.println("Numero de Combinaciones: " + combinaciones);
@@ -75,7 +78,7 @@ public class MagicSquare {
             return false;
         else if (getDiagonalB() != sumOne)
             return false;
-        
+
         //Todo ha ido bien
         return true;
     }
